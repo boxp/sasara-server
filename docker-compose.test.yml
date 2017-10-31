@@ -1,0 +1,8 @@
+version: "2"
+services:
+  sasara-server:
+    image: asia.gcr.io/${PROJECT_NAME}/sasara-server:$CIRCLE_SHA1
+    environment:
+      SASARA_SERVER_EXAMPLE_PORT: "8000"
+      SASARA_SERVER_MY_WEBAPP_PORT: "8080"
+    command: /bin/bash -c "lein test"

@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sasara-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sasara-server
+    spec:
+      containers:
+      - name: sasara-server
+        image: asia.gcr.io/boxp-tk/sasara-server:${CIRCLE_SHA1}
+        ports:
+        - containerPort: 8080
+        env:
+          - name: SASARA_SERVER_MY_WEBAPP_PORT
+            value: "8080"
+          - name: SASARA_SERVER_EXAMPLE_PORT
+            value: "8000"
