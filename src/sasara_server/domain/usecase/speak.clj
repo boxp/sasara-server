@@ -14,7 +14,7 @@
   (s/keys :req-un [:intent-repo/intent-repository-component
                    :voice-repo/voice-repository-component]))
 
-(def get-link-timeout 60000)
+(def get-link-timeout 30000)
 
 (s/fdef get-voice
   :args (s/cat :c ::speak-usecase-component
