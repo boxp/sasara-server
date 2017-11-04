@@ -1,34 +1,34 @@
 (ns sasara-server.system
   (:require [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
-            [sasara-server.infra.datasource.example :refer [example-datasource-component]]
-            [sasara-server.infra.repository.example :refer [example-repository-component]]
-            [sasara-server.domain.usecase.example :refer [example-usecase-component]]
-            [sasara-server.app.my-webapp.handler :refer [my-webapp-handler-component]]
-            [sasara-server.app.my-webapp.endpoint :refer [my-webapp-endpoint-component]])
+            [sasara-server.infra.datasource.pubsub :refer [pubsub-publisher-component pubsub-subscription-component]]
+            [sasara-server.infra.repository.intent :refer [intent-repository-component]]
+            [sasara-server.infra.repository.voice :refer [voice-repository-component]]
+            [sasara-server.domain.usecase.speak :refer [speak-usecase-component]]
+            [sasara-server.app.webapp.handler :refer [webapp-handler-component]]
+            [sasara-server.app.webapp.endpoint :refer [webapp-endpoint-component]])
   (:gen-class))
 
 (defn sasara-server-system
-  [{:keys [sasara-server-example-port
-           sasara-server-my-webapp-port] :as conf}]
+  [{:keys [sasara-server-webapp-port] :as conf}]
   (component/system-map
-    :example-datasource (example-datasource-component sasara-server-example-port)
-    :example-repository (component/using
-                          (example-repository-component)
-                          [:example-datasource])
-    :example-usecase (component/using
-                       (example-usecase-component)
-                       [:example-repository])
-    :my-webapp-handler (component/using
-                         (my-webapp-handler-component)
-                         [:example-usecase])
-    :my-webapp-endpoint (component/using
-                          (my-webapp-endpoint-component sasara-server-my-webapp-port)
-                          [:my-webapp-handler])))
+    :pubsub-publisher-component (pubsub-publisher-component)
+    :pubsub-subscription-component (pubsub-subscription-component)
+    :intent-repository-component (component/using (intent-repository-component)
+                                                  [:pubsub-publisher-component])
+
+    :voice-repository-component (component/using (voice-repository-component)
+                                                 [:pubsub-subscription-component])
+    :speak-usecase-component (component/using (speak-usecase-component)
+                                              [:intent-repository-component
+                                               :voice-repository-component])
+    :webapp-handler-component (component/using (webapp-handler-component)
+                                               [:speak-usecase-component])
+    :webapp-endpoint-component (component/using (webapp-endpoint-component sasara-server-webapp-port)
+                                                [:webapp-handler-component])))
 
 (defn load-config []
-  {:sasara-server-example-port (-> (or (env :sasara-server-example-port) "8000") Integer/parseInt)
-   :sasara-server-my-webapp-port (-> (or (env :sasara-server-my-webapp-port) "8080") Integer/parseInt)})
+  {:sasara-server-webapp-port (-> (or (env :sasara-server-webapp-port) "8080") Integer/parseInt)})
 
 (defn -main []
   (component/start

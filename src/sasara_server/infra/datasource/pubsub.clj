@@ -46,7 +46,7 @@
                      (s/gen string?)))))
 (s/def ::pubsub-publisher-component
   (s/keys :req-un [::project-id ::publishers]))
-(s/def ::pubsub-subscriber-component
+(s/def ::pubsub-subscription-component
   (s/keys :req-un [::project-id ::subscribers]))
 
 (s/fdef create-topic
@@ -119,7 +119,7 @@
   (map->PubSubPublisherComponent {}))
 
 (s/fdef create-subscription
-  :args (s/cat :comp ::pubsub-subscriber-component
+  :args (s/cat :comp ::pubsub-subscription-component
                :topic-key ::topic-key
                :subscription-key ::subscription-key)
   :ret ::subscription)
@@ -136,12 +136,12 @@
                              ack-deadline-second))))
 
 (s/fdef add-subscriber
-  :args (s/cat :comp ::pubsub-subscriber-component
+  :args (s/cat :comp ::pubsub-subscription-component
                :topic-key ::topic-key
                :subscription-key ::subscription-key
                :on-receive (s/fspec :args (s/cat :message ::pubsub-message)
                                     :ret nil?))
-  :ret ::pubsub-subscriber-component)
+  :ret ::pubsub-subscription-component)
 (defn add-subscriber
   [comp topic-key subscription-key on-receive]
   (let [subscription-name (SubscriptionName/create (:project-id comp) (name subscription-key))
@@ -172,7 +172,7 @@
 
 (s/fdef pubsub-subscription-component
   :args (s/cat)
-  :ret ::pubsub-subscriber-component)
+  :ret ::pubsub-subscription-component)
 (defn pubsub-subscription-component
   []
   (map->PubSubSubscriptionComponent {}))
