@@ -1,7 +1,7 @@
 (ns sasara-server.infra.repository.voice
   (:import (com.google.pubsub.v1 PubsubMessage))
   (:require [clojure.spec.alpha :as s]
-            [clojure.core.async :refer [chan put! close! pub sub]]
+            [clojure.core.async :refer [chan put! close! pub sub unsub]]
             [cheshire.core :refer [parse-string]]
             [com.stuartsierra.component :as component]
             [sasara-server.infra.datasource.pubsub :as pubsub]
@@ -37,6 +37,15 @@
   (let [output-c (chan)]
     (sub (:pub-c c) message output-c)
     output-c))
+
+(s/fdef unsubscribe-voice
+  :args (s/cat :c ::voice-repository-component
+               :message string?
+               :ch ::channel)
+  :ret nil?)
+(defn unsubscribe-voice
+  [c message ch]
+  (unsub (:pub-c c) message ch))
 
 (defrecord VoiceRepositoryComponent [pub-c channel]
  component/Lifecycle

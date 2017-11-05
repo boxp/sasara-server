@@ -27,8 +27,9 @@
         voice-c (voice-repo/subscribe-voice voice-repository-component message)]
   (do (intent-repo/publish-intent intent-repository-component
                       {:message message})
-      (-> (alts!! [timeout-c voice-c])
-          first))))
+      (let [res (-> (alts!! [timeout-c voice-c]) first)]
+        (voice-repo/unsubscribe-voice voice-repository-component message voice-c)
+        res))))
 
 (defrecord SpeakUsecaseComponent []
   component/Lifecycle
