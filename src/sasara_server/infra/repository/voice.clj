@@ -1,7 +1,7 @@
 (ns sasara-server.infra.repository.voice
   (:import (com.google.pubsub.v1 PubsubMessage))
   (:require [clojure.spec.alpha :as s]
-            [clojure.core.async :refer [chan put! close!]]
+            [clojure.core.async :refer [chan put! close! pub sub]]
             [cheshire.core :refer [parse-string]]
             [com.stuartsierra.component :as component]
             [sasara-server.infra.datasource.pubsub :as pubsub]
@@ -29,16 +29,19 @@
       (parse-string true)))
 
 (s/fdef subscribe-voice
-  :args (s/cat :c ::voice-repository-component)
+  :args (s/cat :c ::voice-repository-component
+               :message string?)
   :ret ::channel)
 (defn subscribe-voice
-  [c]
-  (:channel c))
+  [c message]
+  (let [output-c (chan)]
+    (sub (:pub-c c) message output-c)
+    output-c))
 
-(defrecord VoiceRepositoryComponent []
+(defrecord VoiceRepositoryComponent [pub-c channel]
  component/Lifecycle
  (start [this]
-   (let [c (chan 1 (map message->voice))]
+   (let [c (chan 10 (map message->voice))]
     (println ";; Starting VoiceRepositoryComponent")
     (try (pubsub/create-subscription (:pubsub-subscription-component this)
                                      topic-key
@@ -49,12 +52,14 @@
         (update :pubsub-subscription-component
                 #(pubsub/add-subscriber % topic-key subscription-key
                                         (fn [m] (put! c m))))
-        (assoc :channel c))))
+        (assoc :channel c)
+        (assoc :pub-c (pub c :message)))))
  (stop [this]
     (println ";; Stopping VoiceRepositoryComponent")
     (when (:channel this) (close! (:channel this)))
     (-> this
-        (dissoc :channel))))
+        (dissoc :channel)
+        (dissoc :pub-c))))
 
 (s/fdef voice-repository-component
   :args (s/cat)

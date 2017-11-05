@@ -24,7 +24,7 @@
   [{:keys [intent-repository-component voice-repository-component] :as c}
    message]
   (let [timeout-c (timeout get-link-timeout)
-        voice-c (voice-repo/subscribe-voice voice-repository-component)]
+        voice-c (voice-repo/subscribe-voice voice-repository-component message)]
   (do (intent-repo/publish-intent intent-repository-component
                       {:message message})
       (-> (alts!! [timeout-c voice-c])
