@@ -60,7 +60,9 @@
     (-> this
         (update :pubsub-subscription-component
                 #(pubsub/add-subscriber % topic-key subscription-key
-                                        (fn [m] (put! c m))))
+                                        (fn [m]
+                                          (-> m message->voice println)
+                                          (put! c m))))
         (assoc :channel c)
         (assoc :pub-c (pub c :message)))))
  (stop [this]
