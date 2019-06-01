@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/core.async "0.3.443"]
                  [environ "1.1.0"]
-                 [com.stuartsierra/component "0.3.2"]
+                 [com.stuartsierra/component "0.4.0"]
                  [ring "1.6.1"]
                  [ring/ring-json "0.4.0"]
                  [compojure "1.6.0"]
