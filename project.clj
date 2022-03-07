@@ -14,6 +14,6 @@
                  [org.clojure/tools.namespace "0.2.10"]
                  [com.google.cloud/google-cloud-pubsub "0.25.0-beta"]]
   :profiles
-  {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]
+  {:dev {:dependencies [[org.clojure/test.check "1.1.1"]]
          :source-paths ["src" "dev"]}
    :uberjar {:main sasara-server.system}})
