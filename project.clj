@@ -11,7 +11,7 @@
                  [ring/ring-json "0.4.0"]
                  [compojure "1.6.0"]
                  [cheshire "5.8.0"]
-                 [org.clojure/tools.namespace "0.2.10"]
+                 [org.clojure/tools.namespace "1.4.4"]
                  [com.google.cloud/google-cloud-pubsub "0.25.0-beta"]]
   :profiles
   {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]
