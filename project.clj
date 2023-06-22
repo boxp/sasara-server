@@ -8,7 +8,7 @@
                  [environ "1.1.0"]
                  [com.stuartsierra/component "0.3.2"]
                  [ring "1.6.1"]
-                 [ring/ring-json "0.4.0"]
+                 [ring/ring-json "0.5.1"]
                  [compojure "1.6.0"]
                  [cheshire "5.8.0"]
                  [org.clojure/tools.namespace "0.2.10"]
