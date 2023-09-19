@@ -10,7 +10,7 @@
                  [ring "1.6.1"]
                  [ring/ring-json "0.4.0"]
                  [compojure "1.6.0"]
-                 [cheshire "5.8.0"]
+                 [cheshire "5.12.0"]
                  [org.clojure/tools.namespace "0.2.10"]
                  [com.google.cloud/google-cloud-pubsub "0.25.0-beta"]]
   :profiles
