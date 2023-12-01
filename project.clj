@@ -12,7 +12,7 @@
                  [compojure "1.6.0"]
                  [cheshire "5.8.0"]
                  [org.clojure/tools.namespace "0.2.10"]
-                 [com.google.cloud/google-cloud-pubsub "0.25.0-beta"]]
+                 [com.google.cloud/google-cloud-pubsub "1.125.13"]]
   :profiles
   {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]
          :source-paths ["src" "dev"]}
